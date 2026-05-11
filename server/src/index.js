@@ -27,6 +27,19 @@ app.use('/api/leads', leadsRouter)
 
 app.use(errorHandler)
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`LeadFlow API running on port ${PORT}`)
+})
+
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(
+      `\n[LeadFlow] Port ${PORT} is already in use.\n` +
+        `Stop the other process (e.g. old node server or Docker Compose server) or set PORT to another value in .env.\n` +
+        `PowerShell: Get-NetTCPConnection -LocalPort ${PORT} | Select-Object OwningProcess\n`,
+    )
+  } else {
+    console.error(err)
+  }
+  process.exit(1)
 })
