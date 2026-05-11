@@ -36,13 +36,7 @@ Reviewers asked for **visible proof of functionality** in addition to the checkl
   <img src="docs/screenshots/feature-phone-picker.png" alt="Phone dial code combobox with search in dark mode" width="720" />
 </p>
 
-Regenerate (app must be running at `http://127.0.0.1:5173` with API + seeded data):
-
-```bash
-cd client
-npx playwright install chromium   # once per machine
-npm run capture:screenshots
-```
+To refresh these PNGs, capture them manually from the running app (or keep the images already in `docs/screenshots/`).
 
 ---
 
@@ -76,7 +70,7 @@ GitHub Actions (`.github/workflows/ci.yml`) runs on push/PR to `main` or `master
 
 1. **api** — Postgres service, Prisma `migrate deploy`, `npm test` (Vitest + Supertest).
 2. **client** — `npm run lint`, `npm run build`.
-3. **e2e** — Migrate, start API + Vite preview (with `/api` proxy), Playwright (Chromium). The default run excludes `readme-screenshots.spec.js` (use `npm run capture:screenshots` in `client/` to refresh README images).
+3. **e2e** — Migrate, start API + Vite preview (with `/api` proxy), Playwright (Chromium).
 
 ---
 
@@ -103,12 +97,6 @@ cd client && npm run dev
 # Terminal 3
 cd client && npx playwright install chromium
 cd client && npm run test:e2e
-```
-
-Regenerate **README screenshots** (app must be up at `http://127.0.0.1:5173`):
-
-```bash
-cd client && npm run capture:screenshots
 ```
 
 Using **production build + preview** (matches CI):
@@ -275,7 +263,7 @@ LeadFlow/
 │       └── migrations/
 ├── docker-compose.yml
 ├── docs/
-│   └── screenshots/       # UI captures for README (regenerate: client npm run capture:screenshots)
+│   └── screenshots/       # UI captures for README
 ├── .env.example
 ├── README.MD
 ├── PRD.MD

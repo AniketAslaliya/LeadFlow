@@ -5,3 +5,5 @@ dist
 *.log
 client/test-results
 playwright-report
+# Local-only Playwright script (not committed)
+client/e2e/readme-screenshots.spec.js
