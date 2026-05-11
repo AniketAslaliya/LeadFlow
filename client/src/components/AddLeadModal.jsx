@@ -79,7 +79,7 @@ export default function AddLeadModal({ isOpen, onClose }) {
         role="dialog"
         aria-modal="true"
         aria-labelledby="add-lead-title"
-        className="max-h-[min(92dvh,720px)] w-full max-w-md animate-fade-in-up overflow-y-auto rounded-t-[var(--radius-modal)] border border-[var(--border-strong)] border-b-0 bg-[var(--bg-surface)] shadow-modal ring-1 ring-white/[0.06] sm:rounded-modal sm:border-b"
+        className="max-h-[min(92dvh,720px)] w-full max-w-md animate-fade-in-up overflow-y-auto rounded-t-[var(--radius-modal)] border border-[var(--border-strong)] border-b-0 bg-[var(--bg-surface)] shadow-modal ring-1 ring-[color:var(--ring-modal)] sm:rounded-modal sm:border-b"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="relative border-b border-[var(--border)] px-6 py-5">
@@ -161,7 +161,7 @@ export default function AddLeadModal({ isOpen, onClose }) {
             <button
               type="submit"
               disabled={saving}
-              className="rounded-xl bg-[var(--accent)] px-5 py-2.5 text-sm font-semibold text-[#0c0d12] shadow-sm transition hover:bg-[var(--accent-hover)] disabled:cursor-not-allowed disabled:opacity-55"
+              className="rounded-xl bg-[var(--accent)] px-5 py-2.5 text-sm font-semibold text-[var(--accent-contrast)] shadow-sm transition hover:bg-[var(--accent-hover)] disabled:cursor-not-allowed disabled:opacity-55"
             >
               {saving ? 'Saving…' : 'Save lead'}
             </button>

@@ -19,7 +19,7 @@ export default function App() {
             fontFamily: 'var(--font-sans)',
           },
           success: {
-            iconTheme: { primary: 'var(--accent)', secondary: '#0c0d12' },
+            iconTheme: { primary: 'var(--accent)', secondary: 'var(--accent-contrast)' },
           },
         }}
       />

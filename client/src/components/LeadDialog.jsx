@@ -102,7 +102,7 @@ function LeadContactSection({ lead, updateLead }) {
             type="button"
             disabled={!contactDirty || savingContact}
             onClick={saveContact}
-            className="rounded-xl bg-[var(--accent)] px-4 py-2.5 text-sm font-semibold text-[#0c0d12] shadow-sm transition hover:bg-[var(--accent-hover)] disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-xl bg-[var(--accent)] px-4 py-2.5 text-sm font-semibold text-[var(--accent-contrast)] shadow-sm transition hover:bg-[var(--accent-hover)] disabled:cursor-not-allowed disabled:opacity-50"
           >
             {savingContact ? 'Saving…' : 'Save contact'}
           </button>
@@ -198,7 +198,7 @@ export default function LeadDialog() {
         role="dialog"
         aria-modal="true"
         aria-labelledby="lead-dialog-title"
-        className="flex max-h-[min(90dvh,880px)] w-full max-w-[600px] animate-fade-in-up flex-col rounded-t-[var(--radius-modal)] border border-[var(--border-strong)] border-b-0 bg-[var(--bg-surface)] shadow-modal ring-1 ring-white/[0.06] sm:max-h-[min(92dvh,880px)] sm:rounded-modal sm:border-b"
+        className="flex max-h-[min(90dvh,880px)] w-full max-w-[600px] animate-fade-in-up flex-col rounded-t-[var(--radius-modal)] border border-[var(--border-strong)] border-b-0 bg-[var(--bg-surface)] shadow-modal ring-1 ring-[color:var(--ring-modal)] sm:max-h-[min(92dvh,880px)] sm:rounded-modal sm:border-b"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="relative shrink-0 border-b border-[var(--border)] bg-[var(--bg-surface)] p-5 pb-4 sm:p-6 sm:pb-5">

@@ -22,7 +22,7 @@ export default function StatusBadge({ status }) {
 
   return (
     <span
-      className="inline-flex shrink-0 items-center rounded-full border border-white/[0.08] px-2.5 py-0.5 text-[0.6875rem] font-semibold uppercase tracking-wide text-[var(--text-primary)] font-mono"
+      className="inline-flex shrink-0 items-center rounded-full border border-[var(--border)] px-2.5 py-0.5 text-[0.6875rem] font-semibold uppercase tracking-wide font-mono"
       style={{
         backgroundColor: style.bg,
         color: style.color,

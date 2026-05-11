@@ -100,7 +100,7 @@ export default function AddDiscussionForm({ leadId, onSaved }) {
         <button
           type="submit"
           disabled={loading}
-          className="rounded-xl bg-[var(--accent)] px-5 py-2.5 text-sm font-semibold text-[#0c0d12] shadow-sm transition hover:bg-[var(--accent-hover)] disabled:cursor-not-allowed disabled:opacity-55"
+          className="rounded-xl bg-[var(--accent)] px-5 py-2.5 text-sm font-semibold text-[var(--accent-contrast)] shadow-sm transition hover:bg-[var(--accent-hover)] disabled:cursor-not-allowed disabled:opacity-55"
         >
           {loading ? 'Saving…' : 'Save note'}
         </button>

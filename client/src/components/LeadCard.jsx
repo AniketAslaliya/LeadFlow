@@ -28,7 +28,7 @@ export default function LeadCard({ lead, onClick }) {
     <button
       type="button"
       onClick={onClick}
-      className="group w-full rounded-card border border-[var(--border)] bg-[var(--bg-surface)] p-4 text-left shadow-card ring-1 ring-white/[0.03] transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--border-strong)] hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-primary)]"
+      className="group w-full rounded-card border border-[var(--border)] bg-[var(--bg-surface)] p-4 text-left shadow-card ring-1 ring-[color:var(--ring-faint)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--border-strong)] hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-primary)]"
       style={{
         backgroundColor: accentBg,
         borderLeftWidth: 3,
@@ -37,7 +37,7 @@ export default function LeadCard({ lead, onClick }) {
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
-          <h3 className="font-display text-[1.0625rem] font-semibold tracking-tight text-[var(--text-primary)] transition group-hover:text-white truncate">
+          <h3 className="font-display text-[1.0625rem] font-semibold tracking-tight text-[var(--text-primary)] transition group-hover:text-[var(--accent)] truncate">
             {lead.name}
           </h3>
           {(lead.company || phoneLine) && (

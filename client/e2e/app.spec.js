@@ -21,4 +21,13 @@ test.describe('LeadFlow UI', () => {
     await expect(page.getByRole('button', { name: /^all$/i })).toBeVisible()
     await expect(page.getByRole('button', { name: /^new$/i })).toBeVisible()
   })
+
+  test('theme toggle changes data-theme on html', async ({ page }) => {
+    await page.goto('/')
+    const before = await page.evaluate(() => document.documentElement.getAttribute('data-theme'))
+    await page.getByRole('button', { name: /switch to (light|dark) mode/i }).click()
+    const after = await page.evaluate(() => document.documentElement.getAttribute('data-theme'))
+    expect(after).not.toBe(before)
+    expect(['light', 'dark']).toContain(after)
+  })
 })

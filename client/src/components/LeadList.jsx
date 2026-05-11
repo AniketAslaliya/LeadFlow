@@ -16,6 +16,7 @@ import AddLeadModal from './AddLeadModal.jsx'
 import LeadDialog from './LeadDialog.jsx'
 import { isToday, isOverdue } from '../utils/dateUtils.js'
 import { formatPhoneDisplay } from '../utils/phoneUtils.js'
+import ThemeToggle from './ThemeToggle.jsx'
 
 const STATUS_CHIPS = [
   { value: 'All', label: 'All' },
@@ -54,7 +55,7 @@ function sortRestLeads(list, sortBy) {
 
 function LeadSkeletonRow() {
   return (
-    <div className="animate-pulse rounded-card border border-[var(--border)] bg-[var(--bg-surface)] p-4 shadow-card ring-1 ring-white/[0.03]">
+    <div className="animate-pulse rounded-card border border-[var(--border)] bg-[var(--bg-surface)] p-4 shadow-card ring-1 ring-[color:var(--ring-faint)]">
       <div className="flex justify-between gap-3">
         <div className="h-5 w-40 rounded-md bg-[var(--bg-elevated)]" />
         <div className="h-6 w-20 rounded-full bg-[var(--bg-elevated)]" />
@@ -181,14 +182,17 @@ export default function LeadList() {
               Pipeline, discussions, and follow-ups in one screen — tuned for daily rep workflows.
             </p>
           </div>
-          <button
-            type="button"
-            onClick={() => setIsAddModalOpen(true)}
-            className="mt-5 inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-xl bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-[#0c0d12] shadow-md shadow-black/25 transition hover:bg-[var(--accent-hover)] active:scale-[0.98] sm:mt-0 sm:w-auto"
-          >
-            <Plus className="h-4 w-4" strokeWidth={2.5} aria-hidden />
-            New lead
-          </button>
+          <div className="mt-5 flex w-full shrink-0 flex-col gap-3 sm:mt-0 sm:w-auto sm:flex-row sm:items-center">
+            <ThemeToggle />
+            <button
+              type="button"
+              onClick={() => setIsAddModalOpen(true)}
+              className="inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-xl bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-[var(--accent-contrast)] shadow-md shadow-black/25 transition hover:bg-[var(--accent-hover)] active:scale-[0.98] sm:w-auto"
+            >
+              <Plus className="h-4 w-4" strokeWidth={2.5} aria-hidden />
+              New lead
+            </button>
+          </div>
         </header>
 
         <div className="shrink-0 space-y-3 border-b border-[var(--border)] bg-[var(--bg-primary)]/95 py-3 sm:py-4">
@@ -284,7 +288,7 @@ export default function LeadList() {
                     onClick={() => setFilter('status', chip.value)}
                     className={`shrink-0 rounded-full border px-3.5 py-2 font-mono text-[0.6875rem] font-medium uppercase tracking-wide transition ${
                       active
-                        ? 'border-[var(--accent)] bg-[var(--accent)] text-[#0c0d12] shadow-sm'
+                        ? 'border-[var(--accent)] bg-[var(--accent)] text-[var(--accent-contrast)] shadow-sm'
                         : 'border-[var(--border)] bg-[var(--bg-surface)]/90 text-[var(--text-secondary)] hover:border-[var(--border-strong)] hover:text-[var(--text-primary)]'
                     }`}
                   >
@@ -312,7 +316,7 @@ export default function LeadList() {
           )}
 
           {isEmpty && !error && (
-            <div className="flex flex-col items-center justify-center rounded-modal border border-dashed border-[var(--border-strong)] bg-[var(--bg-surface)]/50 px-6 py-16 text-center ring-1 ring-white/[0.03]">
+            <div className="flex flex-col items-center justify-center rounded-modal border border-dashed border-[var(--border-strong)] bg-[var(--bg-surface)]/50 px-6 py-16 text-center ring-1 ring-[color:var(--ring-faint)]">
               <Inbox className="mb-4 h-10 w-10 text-[var(--text-tertiary)]" strokeWidth={1.5} aria-hidden />
               <p className="font-display text-base font-semibold text-[var(--text-primary)]">No leads match</p>
               <p className="mt-2 max-w-sm text-sm text-[var(--text-secondary)]">

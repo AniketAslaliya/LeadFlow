@@ -173,6 +173,7 @@ Success responses use `{ "data": ... }`. Errors use `{ "error": "...", "details"
 - Sort: last activity, name, follow-up
 - Timeline dialog: discussions, add note + follow-up, change status, edit contact (+ phone country code)
 - Modal focus trap for accessibility
+- Light / dark theme toggle (saved in the browser; first visit follows system preference)
 - Docker Compose for Postgres + API + client
 - Prisma seed with six sample leads
 - API integration tests (Vitest) and E2E smoke tests (Playwright)
