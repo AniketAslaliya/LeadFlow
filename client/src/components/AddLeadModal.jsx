@@ -1,7 +1,9 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
 import { X } from 'lucide-react'
 import useLeadStore from '../store/useLeadStore.js'
+import PhoneInput from './PhoneInput.jsx'
+import { useModalFocusTrap } from '../hooks/useModalFocusTrap.js'
 
 const fieldClass =
   'mt-2 w-full rounded-xl border border-[var(--border)] bg-[var(--bg-input)] px-3 py-2.5 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none transition focus:border-[var(--border-focus)] focus:shadow-glow'
@@ -11,14 +13,16 @@ export default function AddLeadModal({ isOpen, onClose }) {
 
   const [name, setName] = useState('')
   const [company, setCompany] = useState('')
-  const [phone, setPhone] = useState('')
+  const [phone, setPhone] = useState(undefined)
   const [nameError, setNameError] = useState('')
   const [saving, setSaving] = useState(false)
+  const panelRef = useRef(null)
+  useModalFocusTrap(isOpen, panelRef)
 
   const handleClose = useCallback(() => {
     setName('')
     setCompany('')
-    setPhone('')
+    setPhone(undefined)
     setNameError('')
     setSaving(false)
     onClose()
@@ -47,12 +51,12 @@ export default function AddLeadModal({ isOpen, onClose }) {
       await addLead({
         name: trimmed,
         company: company.trim() || undefined,
-        phone: phone.trim() || undefined,
+        phone: phone?.trim() ? phone.trim() : undefined,
       })
       toast.success('Lead added!')
       setName('')
       setCompany('')
-      setPhone('')
+      setPhone(undefined)
       setNameError('')
       setSaving(false)
       onClose()
@@ -66,15 +70,16 @@ export default function AddLeadModal({ isOpen, onClose }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-md"
+      className="fixed inset-0 z-50 flex items-end justify-center bg-black/70 backdrop-blur-md sm:items-center sm:p-4"
       role="presentation"
       onClick={handleClose}
     >
       <div
+        ref={panelRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby="add-lead-title"
-        className="w-full max-w-md animate-fade-in-up rounded-modal border border-[var(--border-strong)] bg-[var(--bg-surface)] shadow-modal ring-1 ring-white/[0.06]"
+        className="max-h-[min(92dvh,720px)] w-full max-w-md animate-fade-in-up overflow-y-auto rounded-t-[var(--radius-modal)] border border-[var(--border-strong)] border-b-0 bg-[var(--bg-surface)] shadow-modal ring-1 ring-white/[0.06] sm:rounded-modal sm:border-b"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="relative border-b border-[var(--border)] px-6 py-5">
@@ -134,15 +139,15 @@ export default function AddLeadModal({ isOpen, onClose }) {
             <label htmlFor="add-lead-phone" className="text-[0.6875rem] font-semibold uppercase tracking-wider text-[var(--text-tertiary)]">
               Phone <span className="font-normal normal-case tracking-normal text-[var(--text-tertiary)]">(optional)</span>
             </label>
-            <input
+            <PhoneInput
               id="add-lead-phone"
-              type="tel"
-              autoComplete="tel"
               value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="e.g. +1 555 012 3456"
-              className={fieldClass}
+              onChange={setPhone}
+              placeholder="555 012 3456"
             />
+            <p className="mt-1.5 text-xs text-[var(--text-tertiary)]">
+              Pick a country code, then enter the local number (stored in international format).
+            </p>
           </div>
 
           <div className="flex flex-wrap justify-end gap-2 border-t border-[var(--border)] pt-5">

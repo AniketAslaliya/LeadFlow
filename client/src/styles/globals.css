@@ -43,6 +43,7 @@
 
 body {
   margin: 0;
+  min-height: 100dvh;
   background-color: var(--bg-primary);
   color: var(--text-primary);
   font-family: var(--font-sans);
@@ -50,9 +51,18 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+#root {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
 /* Subtle depth without breaking the warm dark brand */
 .app-shell {
-  min-height: 100vh;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
   background-color: var(--bg-primary);
   background-image:
     radial-gradient(ellipse 100% 70% at 50% -30%, rgba(225, 139, 18, 0.085), transparent 55%),

@@ -3,7 +3,7 @@ import LeadList from './components/LeadList.jsx'
 
 export default function App() {
   return (
-    <div className="app-shell text-[var(--text-primary)]">
+    <div className="app-shell flex min-h-dvh flex-col text-[var(--text-primary)]">
       <LeadList />
       <Toaster
         position="top-center"

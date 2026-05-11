@@ -1,0 +1,1 @@
+process.env.API_WRITE_RATE_LIMIT_MAX ??= '20000'

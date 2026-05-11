@@ -30,6 +30,71 @@ Built as a coding assessment for [Es Magico](https://esmagico.in).
 
 ---
 
+## CI
+
+GitHub Actions (`.github/workflows/ci.yml`) runs on push/PR to `main` or `master`:
+
+1. **api** — Postgres service, Prisma `migrate deploy`, `npm test` (Vitest + Supertest).
+2. **client** — `npm run lint`, `npm run build`.
+3. **e2e** — Migrate, start API + Vite preview (with `/api` proxy), Playwright (Chromium).
+
+---
+
+## Testing (local)
+
+**API integration tests** (requires Postgres + `.env` with `DATABASE_URL`):
+
+```bash
+cd server
+npm ci
+npm run db:migrate -- --name init   # once
+npm test
+```
+
+**E2E** (two terminals or background):
+
+```bash
+# Terminal 1
+cd server && npm run dev
+
+# Terminal 2 — optional if API not on 3001
+export VITE_API_PROXY=http://127.0.0.1:3001   # Linux/macOS
+cd client && npm run dev
+# Terminal 3
+cd client && npx playwright install chromium
+cd client && npm run test:e2e
+```
+
+Using **production build + preview** (matches CI):
+
+```bash
+cd client && npm run build
+VITE_API_PROXY=http://127.0.0.1:3001 npx vite preview --host 127.0.0.1 --port 5173
+```
+
+---
+
+## Manual test plan (quick)
+
+1. Load list: leads show name, badge, last note, relative time.
+2. Filter chips + sort + search (including `/` shortcut) + clear search.
+3. Open lead: timeline newest-first; add note; with follow-up, card moves to Today/Overdue as expected.
+4. Status change persists after refresh (reload page).
+5. **Edit contact** in dialog + international phone saves and displays.
+6. **New lead** modal: validation, Escape closes, **Tab** stays inside modal.
+7. Docker Compose: `docker compose up --build`, app loads at `http://localhost:5173`.
+
+---
+
+## Known limitations
+
+- **Auth** is intentionally omitted (per brief).
+- **Pagination**: API supports `take`/`skip`; the UI requests up to **500** leads in one round trip (fine for demos; scale with “load more” or virtualized list later).
+- **Multi-tab**: another tab changing data will not live-sync; reopening a lead **refetches** discussions from the server.
+- **Rate limiting** applies to non-GET API calls (abuse protection); tune `API_WRITE_RATE_LIMIT_MAX` for load tests.
+
+---
+
 ## Tech Stack
 
 | Layer | Technology |
@@ -37,7 +102,7 @@ Built as a coding assessment for [Es Magico](https://esmagico.in).
 | Frontend | React 19 + Vite |
 | Styling | Tailwind CSS v3 + CSS variables |
 | State | Zustand |
-| Backend | Node.js + Express |
+| Backend | Node.js + Express (`helmet`, `compression`, write rate limit) |
 | ORM | Prisma |
 | Database | PostgreSQL |
 | Container | Docker + Docker Compose |
@@ -89,7 +154,7 @@ If port **5432** is already used on your machine, stop the other Postgres servic
 
 | Method | Endpoint | Description |
 | --- | --- | --- |
-| GET | `/api/leads` | List leads with last discussion summary |
+| GET | `/api/leads` | List leads (optional `take` ≤ 500, `skip`; default client requests `take=500`) |
 | POST | `/api/leads` | Create a lead |
 | PATCH | `/api/leads/:id` | Update lead fields |
 | DELETE | `/api/leads/:id` | Delete a lead (optional / bonus) |
@@ -104,11 +169,13 @@ Success responses use `{ "data": ... }`. Errors use `{ "error": "...", "details"
 
 - Lead list with status, last note, and time since last activity
 - Today’s follow-ups grouped at the top; overdue highlighted
-- Status filters and search (name, company, or phone)
-- Timeline dialog: discussions, add note + follow-up, change status
-- Add new lead modal
+- Status filters and search (name, company, or phone); keyboard **`/`** focuses search
+- Sort: last activity, name, follow-up
+- Timeline dialog: discussions, add note + follow-up, change status, edit contact (+ phone country code)
+- Modal focus trap for accessibility
 - Docker Compose for Postgres + API + client
 - Prisma seed with six sample leads
+- API integration tests (Vitest) and E2E smoke tests (Playwright)
 
 ---
 
@@ -124,22 +191,33 @@ NODE_ENV=development
 
 For **Docker** (or pointing the Vite dev proxy at another API host), set optional **`VITE_API_PROXY`** (see comments in `.env.example`).
 
+**CORS:** set **`CORS_ORIGINS`** (comma-separated) if the browser origin is not the default Vite URLs. **Writes** are rate-limited unless you raise **`API_WRITE_RATE_LIMIT_MAX`**.
+
 ---
 
 ## Project Structure
 
 ```
 LeadFlow/
-├── client/                 # React + Vite
+├── .github/
+│   └── workflows/
+│       └── ci.yml          # API + client + Playwright
+├── client/
+│   ├── e2e/
+│   ├── playwright.config.js
 │   ├── Dockerfile
 │   └── src/
 │       ├── components/
+│       ├── hooks/
 │       ├── store/
 │       ├── api/
 │       ├── utils/
 │       └── styles/
 ├── server/                 # Express + Prisma
 │   ├── Dockerfile
+│   ├── test/
+│   │   └── api.test.js     # Vitest + Supertest
+│   ├── vitest.config.js
 │   ├── src/
 │   │   ├── routes/
 │   │   ├── middleware/

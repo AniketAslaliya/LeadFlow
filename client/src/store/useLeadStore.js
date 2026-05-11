@@ -11,7 +11,7 @@ const useLeadStore = create((set, get) => ({
   leads: [],
   selectedLeadId: null,
   discussions: {},
-  filters: { status: 'All', search: '' },
+  filters: { status: 'All', search: '', sortBy: 'activity' },
   isLoading: false,
   error: null,
 
@@ -45,13 +45,22 @@ const useLeadStore = create((set, get) => ({
 
   selectLead: (leadId) => set({ selectedLeadId: leadId }),
 
-  fetchDiscussions: async (leadId) => {
-    if (get().discussions[leadId] !== undefined) return
+  fetchDiscussions: async (leadId, options = {}) => {
+    const { force = false } = options
+    if (!force && get().discussions[leadId] !== undefined) return
     const rows = await apiGetDiscussions(leadId)
     set((state) => ({
       discussions: { ...state.discussions, [leadId]: rows },
     }))
   },
+
+  /** Clears cached timeline for a lead (e.g. before forced refetch). */
+  invalidateDiscussions: (leadId) =>
+    set((state) => {
+      const next = { ...state.discussions }
+      delete next[leadId]
+      return { discussions: next }
+    }),
 
   addDiscussion: async (leadId, data) => {
     const created = await apiCreateDiscussion(leadId, data)

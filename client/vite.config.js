@@ -15,4 +15,13 @@ export default defineConfig({
       },
     },
   },
+  preview: {
+    host: true,
+    proxy: {
+      '/api': {
+        target: apiProxy,
+        changeOrigin: true,
+      },
+    },
+  },
 })

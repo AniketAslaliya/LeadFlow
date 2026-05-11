@@ -1,35 +1,36 @@
 import dotenv from 'dotenv'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import express from 'express'
-import cors from 'cors'
-import discussionsRouter from './routes/discussions.js'
-import leadsRouter from './routes/leads.js'
-import { errorHandler } from './middleware/errorHandler.js'
+import { createApp } from './app.js'
+import { prisma } from './lib/prisma.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 dotenv.config({ path: path.resolve(__dirname, '../../.env') })
 
 const PORT = process.env.PORT || 3001
 
-const app = express()
-
-app.use(
-  cors({
-    origin: 'http://localhost:5173',
-  }),
-)
-app.use(express.json())
-
-// Register specific paths before generic `/:id` routes on the leads router
-app.use('/api/leads', discussionsRouter)
-app.use('/api/leads', leadsRouter)
-
-app.use(errorHandler)
+const app = createApp()
 
 const server = app.listen(PORT, () => {
   console.log(`LeadFlow API running on port ${PORT}`)
 })
+
+function shutdown(signal) {
+  console.log(`\n[LeadFlow] ${signal} received, shutting down…`)
+  server.close(async () => {
+    try {
+      await prisma.$disconnect()
+      console.log('[LeadFlow] Prisma disconnected')
+    } catch (e) {
+      console.error('[LeadFlow] Prisma disconnect error', e)
+    }
+    process.exit(0)
+  })
+  setTimeout(() => process.exit(1), 10_000).unref()
+}
+
+process.on('SIGINT', () => shutdown('SIGINT'))
+process.on('SIGTERM', () => shutdown('SIGTERM'))
 
 server.on('error', (err) => {
   if (err.code === 'EADDRINUSE') {

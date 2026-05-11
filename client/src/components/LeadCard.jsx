@@ -1,5 +1,6 @@
 import StatusBadge from './StatusBadge.jsx'
 import { isToday, isOverdue, timeAgo } from '../utils/dateUtils.js'
+import { formatPhoneDisplay } from '../utils/phoneUtils.js'
 import { format } from 'date-fns'
 
 const STATUS_BORDER = {
@@ -21,6 +22,7 @@ export default function LeadCard({ lead, onClick }) {
 
   const lastNote = lead.lastDiscussion?.note ?? 'No notes yet'
   const lastAt = lead.lastDiscussion?.createdAt
+  const phoneLine = formatPhoneDisplay(lead.phone)
 
   return (
     <button
@@ -38,9 +40,9 @@ export default function LeadCard({ lead, onClick }) {
           <h3 className="font-display text-[1.0625rem] font-semibold tracking-tight text-[var(--text-primary)] transition group-hover:text-white truncate">
             {lead.name}
           </h3>
-          {(lead.company || lead.phone) && (
+          {(lead.company || phoneLine) && (
             <p className="mt-1 font-mono text-[0.75rem] leading-snug text-[var(--text-secondary)] truncate">
-              {[lead.company, lead.phone].filter(Boolean).join(' · ')}
+              {[lead.company, phoneLine].filter(Boolean).join(' · ')}
             </p>
           )}
         </div>

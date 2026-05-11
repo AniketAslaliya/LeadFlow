@@ -31,6 +31,14 @@ export function errorHandler(err, req, res, next) {
     return res.status(404).json({ error: err.message || 'Not found' })
   }
 
+  if (err.status === 429 || err.statusCode === 429) {
+    return res.status(429).json({ error: err.message || 'Too many requests' })
+  }
+
   console.error(err)
-  return res.status(500).json({ error: err.message || 'Internal server error' })
+  const expose =
+    process.env.NODE_ENV !== 'production' && err?.message && typeof err.message === 'string'
+  return res.status(500).json({
+    error: expose ? err.message : 'Internal server error',
+  })
 }

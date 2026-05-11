@@ -20,8 +20,13 @@ async function handleResponse(response) {
   return body
 }
 
-export async function getLeads() {
-  const res = await fetch('/api/leads')
+export async function getLeads(opts = {}) {
+  const take = opts.take ?? 500
+  const skip = opts.skip
+  const sp = new URLSearchParams()
+  sp.set('take', String(Math.min(500, Math.max(1, take))))
+  if (skip != null && skip > 0) sp.set('skip', String(skip))
+  const res = await fetch(`/api/leads?${sp.toString()}`)
   const body = await handleResponse(res)
   return body.data
 }
