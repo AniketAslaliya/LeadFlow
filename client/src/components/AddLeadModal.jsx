@@ -70,7 +70,7 @@ export default function AddLeadModal({ isOpen, onClose }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-black/70 backdrop-blur-md sm:items-center sm:p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-md"
       role="presentation"
       onClick={handleClose}
     >
@@ -79,7 +79,7 @@ export default function AddLeadModal({ isOpen, onClose }) {
         role="dialog"
         aria-modal="true"
         aria-labelledby="add-lead-title"
-        className="max-h-[min(92dvh,720px)] w-full max-w-md animate-fade-in-up overflow-y-auto rounded-t-[var(--radius-modal)] border border-[var(--border-strong)] border-b-0 bg-[var(--bg-surface)] shadow-modal ring-1 ring-[color:var(--ring-modal)] sm:rounded-modal sm:border-b"
+        className="max-h-[min(92dvh,720px)] w-full max-w-md animate-fade-in-up overflow-y-auto rounded-modal border border-[var(--border-strong)] bg-[var(--bg-surface)] shadow-modal ring-1 ring-[color:var(--ring-modal)]"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="relative border-b border-[var(--border)] px-6 py-5">
@@ -146,7 +146,7 @@ export default function AddLeadModal({ isOpen, onClose }) {
               placeholder="555 012 3456"
             />
             <p className="mt-1.5 text-xs text-[var(--text-tertiary)]">
-              Pick a country code, then enter the local number (stored in international format).
+              Search by country name or dial code; lone matches apply automatically. Local number is stored in international format.
             </p>
           </div>
 

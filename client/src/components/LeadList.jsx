@@ -17,6 +17,7 @@ import LeadDialog from './LeadDialog.jsx'
 import { isToday, isOverdue } from '../utils/dateUtils.js'
 import { formatPhoneDisplay } from '../utils/phoneUtils.js'
 import ThemeToggle from './ThemeToggle.jsx'
+import NativeSelect from './NativeSelect.jsx'
 
 const STATUS_CHIPS = [
   { value: 'All', label: 'All' },
@@ -262,18 +263,18 @@ export default function LeadList() {
               <label htmlFor="lead-sort" className="sr-only">
                 Sort leads
               </label>
-              <select
+              <NativeSelect
                 id="lead-sort"
+                className="w-full sm:w-[11.5rem]"
                 value={filters.sortBy ?? 'activity'}
                 onChange={(e) => setFilter('sortBy', e.target.value)}
-                className="w-full rounded-xl border border-[var(--border)] bg-[var(--bg-input)] py-3 pl-3 pr-8 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--border-focus)] focus:shadow-glow sm:w-[11.5rem]"
               >
                 {SORT_OPTIONS.map((o) => (
                   <option key={o.value} value={o.value}>
                     {o.label}
                   </option>
                 ))}
-              </select>
+              </NativeSelect>
             </div>
           </div>
 

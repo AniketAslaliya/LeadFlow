@@ -88,6 +88,29 @@ export const DIAL_CODES = (() => {
   return rows.sort((a, b) => b.dial.length - a.dial.length)
 })()
 
+/** @param {string} dial */
+export function findDialRow(dial) {
+  return (
+    DIAL_CODES.find((r) => r.dial === dial) ?? DIAL_CODES.find((r) => r.dial === DEFAULT_DIAL) ?? { dial: DEFAULT_DIAL, label: 'US / CA' }
+  )
+}
+
+/** Filter by country/region name or calling code while user types. */
+export function filterDialCodes(search) {
+  const q = search.trim().toLowerCase()
+  if (!q) return DIAL_CODES
+  const digits = q.replace(/\D/g, '')
+  return DIAL_CODES.filter((row) => {
+    if (row.label.toLowerCase().includes(q)) return true
+    if (row.dial.toLowerCase().includes(q)) return true
+    if (digits.length > 0) {
+      const d = row.dial.replace(/^\+/, '')
+      if (d.startsWith(digits) || d.includes(digits)) return true
+    }
+    return false
+  })
+}
+
 /**
  * @param {string | null | undefined} raw
  * @returns {{ dial: string; nationalDigits: string }}

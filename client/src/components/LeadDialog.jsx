@@ -7,6 +7,7 @@ import AddDiscussionForm from './AddDiscussionForm.jsx'
 import PhoneInput from './PhoneInput.jsx'
 import { formatPhoneDisplay, telHref } from '../utils/phoneUtils.js'
 import { useModalFocusTrap } from '../hooks/useModalFocusTrap.js'
+import NativeSelect from './NativeSelect.jsx'
 
 const STATUS_OPTIONS = [
   { value: 'New', label: 'New' },
@@ -230,18 +231,18 @@ export default function LeadDialog() {
           <label htmlFor="lead-status" className="mt-4 block text-[0.6875rem] font-semibold uppercase tracking-wider text-[var(--text-tertiary)] sm:mt-5">
             Status
           </label>
-          <select
+          <NativeSelect
             id="lead-status"
+            className="mt-2 w-full max-w-xs"
             value={lead.status}
             onChange={handleStatusChange}
-            className="mt-2 w-full max-w-xs rounded-xl border border-[var(--border)] bg-[var(--bg-input)] px-3 py-2.5 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--border-focus)] focus:shadow-glow"
           >
             {STATUS_OPTIONS.map((o) => (
               <option key={o.value} value={o.value}>
                 {o.label}
               </option>
             ))}
-          </select>
+          </NativeSelect>
 
           <LeadContactSection key={lead.id} lead={lead} updateLead={updateLead} />
         </div>

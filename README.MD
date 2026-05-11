@@ -4,6 +4,46 @@
 
 Built as a coding assessment for [Es Magico](https://esmagico.in).
 
+## Screenshots
+
+Reviewers asked for **visible proof of functionality** in addition to the checklist below. Everything below is captured in **dark mode**, except the first image: a **single side‑by‑side** frame so **dark and light** appear in **one** file.
+
+| Image | What it demonstrates |
+| --- | --- |
+| `docs/screenshots/theme-dark-and-light.png` | **Theme:** same view in dark (left) and light (right). |
+| `docs/screenshots/feature-workspace.png` | **Lead list:** today / overdue / pipeline sections, cards (status, last note, time), sort control. |
+| `docs/screenshots/feature-filters-search.png` | **Status filter** + **search** (debounced name / company / phone) + chips + sort row. |
+| `docs/screenshots/feature-new-lead.png` | **Add lead** modal (validation fields, phone, focus‑safe layout). |
+| `docs/screenshots/feature-lead-dialog.png` | **Timeline dialog:** discussions (newest‑first), status, editable contact / phone. |
+| `docs/screenshots/feature-phone-picker.png` | **International phone:** searchable country / dial code combobox. |
+
+<p align="center"><strong>Theme (dark + light in one image)</strong><br/>
+  <img src="docs/screenshots/theme-dark-and-light.png" alt="LeadFlow dark theme beside light theme" width="1000" />
+</p>
+<p align="center"><strong>Workspace</strong><br/>
+  <img src="docs/screenshots/feature-workspace.png" alt="Lead list, sections, and sort in dark mode" width="720" />
+</p>
+<p align="center"><strong>Filters &amp; search</strong><br/>
+  <img src="docs/screenshots/feature-filters-search.png" alt="Status chips, search, and sort in dark mode" width="720" />
+</p>
+<p align="center"><strong>New lead</strong><br/>
+  <img src="docs/screenshots/feature-new-lead.png" alt="New lead modal in dark mode" width="720" />
+</p>
+<p align="center"><strong>Lead detail &amp; timeline</strong><br/>
+  <img src="docs/screenshots/feature-lead-dialog.png" alt="Lead dialog with timeline in dark mode" width="720" />
+</p>
+<p align="center"><strong>Phone country search</strong><br/>
+  <img src="docs/screenshots/feature-phone-picker.png" alt="Phone dial code combobox with search in dark mode" width="720" />
+</p>
+
+Regenerate (app must be running at `http://127.0.0.1:5173` with API + seeded data):
+
+```bash
+cd client
+npx playwright install chromium   # once per machine
+npm run capture:screenshots
+```
+
 ---
 
 ## Submission checklist (evaluation matrix)
@@ -24,7 +64,7 @@ Built as a coding assessment for [Es Magico](https://esmagico.in).
 | **Seed** | `server/prisma/seed.js`: **6** leads, each with at least one discussion. |
 | **API shape & errors** | JSON `{ data }` / `{ error, details? }`; `400` validation, `404` not found, `500` fallback in `errorHandler.js`. |
 
-**Demo asset for reviewers:** add **`screenshot.png`** at the repo root and embed it here, or link a short screen recording in your submission email. (The image file is intentionally not committed so you can attach your own capture.)
+**Demo for reviewers:** screenshots live in **`docs/screenshots/`** (see [Screenshots](#screenshots) above). Optionally add a short screen recording link in your submission email.
 
 **Use of AI:** Parts of this project were developed with AI coding assistance (scaffolding, UI polish, and documentation). All behavior was reviewed and verified against the spec above; inspect `git log` for incremental, reviewable commits.
 
@@ -36,7 +76,7 @@ GitHub Actions (`.github/workflows/ci.yml`) runs on push/PR to `main` or `master
 
 1. **api** — Postgres service, Prisma `migrate deploy`, `npm test` (Vitest + Supertest).
 2. **client** — `npm run lint`, `npm run build`.
-3. **e2e** — Migrate, start API + Vite preview (with `/api` proxy), Playwright (Chromium).
+3. **e2e** — Migrate, start API + Vite preview (with `/api` proxy), Playwright (Chromium). The default run excludes `readme-screenshots.spec.js` (use `npm run capture:screenshots` in `client/` to refresh README images).
 
 ---
 
@@ -63,6 +103,12 @@ cd client && npm run dev
 # Terminal 3
 cd client && npx playwright install chromium
 cd client && npm run test:e2e
+```
+
+Regenerate **README screenshots** (app must be up at `http://127.0.0.1:5173`):
+
+```bash
+cd client && npm run capture:screenshots
 ```
 
 Using **production build + preview** (matches CI):
@@ -228,6 +274,8 @@ LeadFlow/
 │       ├── seed.js
 │       └── migrations/
 ├── docker-compose.yml
+├── docs/
+│   └── screenshots/       # UI captures for README (regenerate: client npm run capture:screenshots)
 ├── .env.example
 ├── README.MD
 ├── PRD.MD
