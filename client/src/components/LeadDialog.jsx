@@ -1,3 +1,160 @@
+import { useEffect, useMemo, useState } from 'react'
+import toast from 'react-hot-toast'
+import { X, Loader2 } from 'lucide-react'
+import useLeadStore from '../store/useLeadStore.js'
+import DiscussionItem from './DiscussionItem.jsx'
+import AddDiscussionForm from './AddDiscussionForm.jsx'
+
+const STATUS_OPTIONS = [
+  { value: 'New', label: 'New' },
+  { value: 'Contacted', label: 'Contacted' },
+  { value: 'Qualified', label: 'Qualified' },
+  { value: 'ProposalSent', label: 'Proposal Sent' },
+  { value: 'Won', label: 'Won' },
+  { value: 'Lost', label: 'Lost' },
+]
+
 export default function LeadDialog() {
-  return null
+  const selectedLeadId = useLeadStore((s) => s.selectedLeadId)
+  const leads = useLeadStore((s) => s.leads)
+  const discussionsByLead = useLeadStore((s) => s.discussions)
+  const fetchDiscussions = useLeadStore((s) => s.fetchDiscussions)
+  const updateLead = useLeadStore((s) => s.updateLead)
+  const selectLead = useLeadStore((s) => s.selectLead)
+
+  const [discussionsLoading, setDiscussionsLoading] = useState(false)
+  const [panelVisible, setPanelVisible] = useState(false)
+
+  const lead = useMemo(
+    () => leads.find((l) => l.id === selectedLeadId) ?? null,
+    [leads, selectedLeadId],
+  )
+
+  const discussions = selectedLeadId ? discussionsByLead[selectedLeadId] : undefined
+
+  useEffect(() => {
+    if (selectedLeadId && !leads.some((l) => l.id === selectedLeadId)) {
+      selectLead(null)
+    }
+  }, [selectedLeadId, leads, selectLead])
+
+  useEffect(() => {
+    if (!selectedLeadId) {
+      setPanelVisible(false)
+      return
+    }
+    setPanelVisible(false)
+    const id = requestAnimationFrame(() => setPanelVisible(true))
+
+    let cancelled = false
+    ;(async () => {
+      setDiscussionsLoading(true)
+      try {
+        await fetchDiscussions(selectedLeadId)
+      } finally {
+        if (!cancelled) setDiscussionsLoading(false)
+      }
+    })()
+
+    return () => {
+      cancelled = true
+      cancelAnimationFrame(id)
+    }
+  }, [selectedLeadId, fetchDiscussions])
+
+  useEffect(() => {
+    if (!selectedLeadId) return undefined
+    const onKey = (e) => {
+      if (e.key === 'Escape') selectLead(null)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [selectedLeadId, selectLead])
+
+  if (!selectedLeadId || !lead) {
+    return null
+  }
+
+  const close = () => selectLead(null)
+
+  const handleStatusChange = async (e) => {
+    const status = e.target.value
+    try {
+      await updateLead(lead.id, { status })
+    } catch {
+      toast.error('Could not update status')
+    }
+  }
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+      role="presentation"
+      onClick={close}
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="lead-dialog-title"
+        className={`flex max-h-[90vh] w-full max-w-[600px] flex-col rounded-xl bg-[#1A1A1A] shadow-2xl ring-1 ring-[var(--border)] transition-all duration-200 ${panelVisible ? 'translate-y-0 scale-100 opacity-100' : 'translate-y-2 scale-[0.98] opacity-0'}`}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="relative border-b border-[var(--border)] p-5 pb-4">
+          <button
+            type="button"
+            onClick={close}
+            className="absolute right-4 top-4 rounded-lg p-1.5 text-[var(--text-tertiary)] transition hover:bg-[var(--bg-elevated)] hover:text-[var(--text-primary)]"
+            aria-label="Close"
+          >
+            <X className="h-5 w-5" strokeWidth={2} />
+          </button>
+          <h2 id="lead-dialog-title" className="font-display pr-10 text-2xl font-bold text-[var(--text-primary)]">
+            {lead.name}
+          </h2>
+          {(lead.company || lead.phone) && (
+            <p className="mt-1 font-mono text-sm text-[var(--text-secondary)]">
+              {[lead.company, lead.phone].filter(Boolean).join(' · ')}
+            </p>
+          )}
+          <label htmlFor="lead-status" className="mt-4 block text-xs font-medium uppercase tracking-wide text-[var(--text-tertiary)]">
+            Status
+          </label>
+          <select
+            id="lead-status"
+            value={lead.status}
+            onChange={handleStatusChange}
+            className="mt-1 w-full max-w-xs rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] px-3 py-2 text-sm text-[var(--text-primary)] outline-none ring-[var(--border-focus)] focus:ring-2"
+          >
+            {STATUS_OPTIONS.map((o) => (
+              <option key={o.value} value={o.value}>
+                {o.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4">
+          {discussionsLoading && discussions === undefined ? (
+            <div className="flex justify-center py-12 text-[var(--accent)]">
+              <Loader2 className="h-8 w-8 animate-spin" strokeWidth={2.5} />
+            </div>
+          ) : (discussions?.length ?? 0) === 0 ? (
+            <p className="py-8 text-center text-sm text-[var(--text-tertiary)]">
+              No discussions yet. Log the first one below.
+            </p>
+          ) : (
+            <div className="pr-1">
+              {discussions.map((d) => (
+                <DiscussionItem key={d.id} discussion={d} />
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="shrink-0 border-t border-[var(--border)] px-5 py-4">
+          <AddDiscussionForm leadId={selectedLeadId} onSaved={() => {}} />
+        </div>
+      </div>
+    </div>
+  )
 }
