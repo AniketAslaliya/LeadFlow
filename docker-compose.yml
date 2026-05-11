@@ -1,0 +1,41 @@
+services:
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: leadflow
+      POSTGRES_PASSWORD: leadflow
+      POSTGRES_DB: leadflow
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U leadflow -d leadflow']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  server:
+    build: ./server
+    environment:
+      DATABASE_URL: postgresql://leadflow:leadflow@db:5432/leadflow
+      PORT: 3001
+      NODE_ENV: production
+    ports:
+      - '3001:3001'
+    depends_on:
+      db:
+        condition: service_healthy
+    command: sh -c "npx prisma migrate deploy && node prisma/seed.js && node src/index.js"
+
+  client:
+    build: ./client
+    environment:
+      VITE_API_PROXY: http://server:3001
+    ports:
+      - '5173:5173'
+    depends_on:
+      - server
+
+volumes:
+  pgdata:

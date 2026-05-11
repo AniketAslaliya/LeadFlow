@@ -15,6 +15,19 @@ const STATUS_CHIPS = [
   { value: 'Lost', label: 'Lost' },
 ]
 
+function LeadSkeletonRow() {
+  return (
+    <div className="animate-pulse rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] p-4">
+      <div className="flex justify-between gap-3">
+        <div className="h-5 w-40 rounded bg-[var(--bg-elevated)]" />
+        <div className="h-6 w-20 rounded-full bg-[var(--bg-elevated)]" />
+      </div>
+      <div className="mt-3 h-4 w-full max-w-md rounded bg-[var(--bg-elevated)]" />
+      <div className="mt-2 h-3 w-24 rounded bg-[var(--bg-elevated)]" />
+    </div>
+  )
+}
+
 export default function LeadList() {
   const leads = useLeadStore((s) => s.leads)
   const filters = useLeadStore((s) => s.filters)
@@ -66,6 +79,8 @@ export default function LeadList() {
   }, [filtered])
 
   const isEmpty = filtered.length === 0 && !isLoading
+
+  let staggerIndex = 0
 
   return (
     <div className="mx-auto min-h-screen max-w-3xl px-4 py-8 sm:px-6">
@@ -123,7 +138,11 @@ export default function LeadList() {
       )}
 
       {isLoading && (
-        <p className="text-center text-sm text-[var(--text-tertiary)]">Loading leads…</p>
+        <div className="flex flex-col gap-3" aria-busy="true" aria-label="Loading leads">
+          {Array.from({ length: 6 }, (_, i) => (
+            <LeadSkeletonRow key={i} />
+          ))}
+        </div>
       )}
 
       {isEmpty && !error && (
@@ -132,54 +151,77 @@ export default function LeadList() {
         </p>
       )}
 
-      <div className="flex flex-col gap-8">
-        {today.length > 0 && (
-          <section>
-            <h2 className="mb-3 font-display text-sm font-semibold uppercase tracking-wide text-[#FBBF24]/90">
-              📌 Today&apos;s Follow-ups
-            </h2>
-            <ul className="flex flex-col gap-3">
-              {today.map((lead) => (
-                <li key={lead.id}>
-                  <LeadCard lead={lead} onClick={() => selectLead(lead.id)} />
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
-
-        {overdue.length > 0 && (
-          <section>
-            <h2 className="mb-3 font-display text-sm font-semibold uppercase tracking-wide text-[var(--overdue-text)]">
-              ⚠ Overdue
-            </h2>
-            <ul className="flex flex-col gap-3">
-              {overdue.map((lead) => (
-                <li key={lead.id}>
-                  <LeadCard lead={lead} onClick={() => selectLead(lead.id)} />
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
-
-        {rest.length > 0 && (
-          <section>
-            {(today.length > 0 || overdue.length > 0) && (
-              <h2 className="mb-3 font-display text-sm font-semibold text-[var(--text-tertiary)]">
-                All leads
+      {!isLoading && (
+        <div className="flex flex-col gap-8">
+          {today.length > 0 && (
+            <section>
+              <h2 className="mb-3 font-display text-sm font-semibold uppercase tracking-wide text-[#FBBF24]/90">
+                📌 Today&apos;s Follow-ups
               </h2>
-            )}
-            <ul className="flex flex-col gap-3">
-              {rest.map((lead) => (
-                <li key={lead.id}>
-                  <LeadCard lead={lead} onClick={() => selectLead(lead.id)} />
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
-      </div>
+              <ul className="flex flex-col gap-3">
+                {today.map((lead) => {
+                  const delay = staggerIndex++
+                  return (
+                    <li
+                      key={lead.id}
+                      className="animate-fade-in-up"
+                      style={{ animationDelay: `${delay * 55}ms` }}
+                    >
+                      <LeadCard lead={lead} onClick={() => selectLead(lead.id)} />
+                    </li>
+                  )
+                })}
+              </ul>
+            </section>
+          )}
+
+          {overdue.length > 0 && (
+            <section>
+              <h2 className="mb-3 font-display text-sm font-semibold uppercase tracking-wide text-[var(--overdue-text)]">
+                ⚠ Overdue
+              </h2>
+              <ul className="flex flex-col gap-3">
+                {overdue.map((lead) => {
+                  const delay = staggerIndex++
+                  return (
+                    <li
+                      key={lead.id}
+                      className="animate-fade-in-up"
+                      style={{ animationDelay: `${delay * 55}ms` }}
+                    >
+                      <LeadCard lead={lead} onClick={() => selectLead(lead.id)} />
+                    </li>
+                  )
+                })}
+              </ul>
+            </section>
+          )}
+
+          {rest.length > 0 && (
+            <section>
+              {(today.length > 0 || overdue.length > 0) && (
+                <h2 className="mb-3 font-display text-sm font-semibold text-[var(--text-tertiary)]">
+                  All leads
+                </h2>
+              )}
+              <ul className="flex flex-col gap-3">
+                {rest.map((lead) => {
+                  const delay = staggerIndex++
+                  return (
+                    <li
+                      key={lead.id}
+                      className="animate-fade-in-up"
+                      style={{ animationDelay: `${delay * 55}ms` }}
+                    >
+                      <LeadCard lead={lead} onClick={() => selectLead(lead.id)} />
+                    </li>
+                  )
+                })}
+              </ul>
+            </section>
+          )}
+        </div>
+      )}
 
       <AddLeadModal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} />
       <LeadDialog />

@@ -24,6 +24,8 @@
 
   --font-display: 'Sora', sans-serif;
   --font-mono: 'IBM Plex Mono', monospace;
+
+  color-scheme: dark;
 }
 
 body {
@@ -31,4 +33,15 @@ body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
   font-family: var(--font-display);
+}
+
+/* Dark native controls (date/time, selects) in supported browsers */
+input,
+textarea,
+select {
+  color-scheme: dark;
+}
+
+input[type='search']::-webkit-search-cancel-button {
+  filter: invert(0.85);
 }
