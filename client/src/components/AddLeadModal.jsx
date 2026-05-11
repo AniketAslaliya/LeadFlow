@@ -11,7 +11,6 @@ export default function AddLeadModal({ isOpen, onClose }) {
   const [phone, setPhone] = useState('')
   const [nameError, setNameError] = useState('')
   const [saving, setSaving] = useState(false)
-  const [panelVisible, setPanelVisible] = useState(false)
 
   const handleClose = useCallback(() => {
     setName('')
@@ -21,21 +20,6 @@ export default function AddLeadModal({ isOpen, onClose }) {
     setSaving(false)
     onClose()
   }, [onClose])
-
-  useEffect(() => {
-    if (!isOpen) {
-      setPanelVisible(false)
-      return
-    }
-    setName('')
-    setCompany('')
-    setPhone('')
-    setNameError('')
-    setSaving(false)
-    setPanelVisible(false)
-    const id = requestAnimationFrame(() => setPanelVisible(true))
-    return () => cancelAnimationFrame(id)
-  }, [isOpen])
 
   useEffect(() => {
     if (!isOpen) return undefined
@@ -87,7 +71,7 @@ export default function AddLeadModal({ isOpen, onClose }) {
         role="dialog"
         aria-modal="true"
         aria-labelledby="add-lead-title"
-        className={`w-full max-w-md rounded-xl bg-[#1A1A1A] shadow-2xl ring-1 ring-[var(--border)] transition-all duration-200 ${panelVisible ? 'translate-y-0 scale-100 opacity-100' : 'translate-y-3 scale-[0.98] opacity-0'}`}
+        className="w-full max-w-md animate-fade-in-up rounded-xl bg-[#1A1A1A] shadow-2xl ring-1 ring-[var(--border)]"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="relative border-b border-[var(--border)] px-5 py-4">

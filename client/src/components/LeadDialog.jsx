@@ -23,7 +23,6 @@ export default function LeadDialog() {
   const selectLead = useLeadStore((s) => s.selectLead)
 
   const [discussionsLoading, setDiscussionsLoading] = useState(false)
-  const [panelVisible, setPanelVisible] = useState(false)
 
   const lead = useMemo(
     () => leads.find((l) => l.id === selectedLeadId) ?? null,
@@ -34,31 +33,28 @@ export default function LeadDialog() {
 
   useEffect(() => {
     if (selectedLeadId && !leads.some((l) => l.id === selectedLeadId)) {
-      selectLead(null)
+      queueMicrotask(() => selectLead(null))
     }
   }, [selectedLeadId, leads, selectLead])
 
   useEffect(() => {
-    if (!selectedLeadId) {
-      setPanelVisible(false)
-      return
-    }
-    setPanelVisible(false)
-    const id = requestAnimationFrame(() => setPanelVisible(true))
-
+    if (!selectedLeadId) return undefined
     let cancelled = false
+    queueMicrotask(() => {
+      if (!cancelled) setDiscussionsLoading(true)
+    })
     ;(async () => {
-      setDiscussionsLoading(true)
       try {
         await fetchDiscussions(selectedLeadId)
       } finally {
-        if (!cancelled) setDiscussionsLoading(false)
+        if (!cancelled) {
+          queueMicrotask(() => setDiscussionsLoading(false))
+        }
       }
     })()
-
     return () => {
       cancelled = true
-      cancelAnimationFrame(id)
+      queueMicrotask(() => setDiscussionsLoading(false))
     }
   }, [selectedLeadId, fetchDiscussions])
 
@@ -93,10 +89,11 @@ export default function LeadDialog() {
       onClick={close}
     >
       <div
+        key={selectedLeadId}
         role="dialog"
         aria-modal="true"
         aria-labelledby="lead-dialog-title"
-        className={`flex max-h-[90vh] w-full max-w-[600px] flex-col rounded-xl bg-[#1A1A1A] shadow-2xl ring-1 ring-[var(--border)] transition-all duration-200 ${panelVisible ? 'translate-y-0 scale-100 opacity-100' : 'translate-y-2 scale-[0.98] opacity-0'}`}
+        className="flex max-h-[90vh] w-full max-w-[600px] animate-fade-in-up flex-col rounded-xl bg-[#1A1A1A] shadow-2xl ring-1 ring-[var(--border)]"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="relative border-b border-[var(--border)] p-5 pb-4">
