@@ -2,6 +2,9 @@ import { useState } from 'react'
 import toast from 'react-hot-toast'
 import useLeadStore from '../store/useLeadStore.js'
 
+const inputClass =
+  'rounded-xl border border-[var(--border)] bg-[var(--bg-input)] px-3 py-2.5 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--border-focus)] focus:shadow-glow'
+
 export default function AddDiscussionForm({ leadId, onSaved }) {
   const addDiscussion = useLeadStore((s) => s.addDiscussion)
 
@@ -57,55 +60,47 @@ export default function AddDiscussionForm({ leadId, onSaved }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="border-t border-[var(--border)] pt-4">
-      <label htmlFor={`note-${leadId}`} className="sr-only">
-        Discussion note
-      </label>
-      <textarea
-        id={`note-${leadId}`}
-        value={note}
-        onChange={(e) => {
-          setNote(e.target.value)
-          if (noteError) setNoteError('')
-        }}
-        placeholder="Log a new discussion…"
-        rows={4}
-        className="min-h-[80px] w-full resize-y rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] px-3 py-2 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none ring-[var(--border-focus)] focus:ring-2"
-      />
-      {noteError && <p className="mt-1 text-sm text-red-400">{noteError}</p>}
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div>
+        <label htmlFor={`note-${leadId}`} className="mb-1.5 block text-[0.6875rem] font-semibold uppercase tracking-wider text-[var(--text-tertiary)]">
+          Note
+        </label>
+        <textarea
+          id={`note-${leadId}`}
+          value={note}
+          onChange={(e) => {
+            setNote(e.target.value)
+            if (noteError) setNoteError('')
+          }}
+          placeholder="Log a call, email, or next step…"
+          rows={4}
+          className={`${inputClass} min-h-[100px] w-full resize-y`}
+        />
+        {noteError && <p className="mt-1.5 text-sm text-red-400/95">{noteError}</p>}
+      </div>
 
-      <label className="mt-3 flex items-center gap-2 text-sm text-[var(--text-secondary)]">
+      <label className="flex cursor-pointer items-center gap-2.5 text-sm font-medium text-[var(--text-secondary)]">
         <input
           type="checkbox"
           checked={setFollowUp}
           onChange={(e) => setSetFollowUp(e.target.checked)}
-          className="h-4 w-4 rounded border-[var(--border)] bg-[var(--bg-elevated)] text-[var(--accent)]"
+          className="h-4 w-4 rounded border-[var(--border)] bg-[var(--bg-input)] text-[var(--accent)]"
         />
-        Set follow-up
+        Schedule follow-up on lead
       </label>
 
       {setFollowUp && (
-        <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2">
-          <input
-            type="date"
-            value={followUpDate}
-            onChange={(e) => setFollowUpDate(e.target.value)}
-            className="rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] px-3 py-2 text-sm text-[var(--text-primary)] outline-none ring-[var(--border-focus)] focus:ring-2"
-          />
-          <input
-            type="time"
-            value={followUpTime}
-            onChange={(e) => setFollowUpTime(e.target.value)}
-            className="rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] px-3 py-2 text-sm text-[var(--text-primary)] outline-none ring-[var(--border-focus)] focus:ring-2"
-          />
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <input type="date" value={followUpDate} onChange={(e) => setFollowUpDate(e.target.value)} className={inputClass} />
+          <input type="time" value={followUpTime} onChange={(e) => setFollowUpTime(e.target.value)} className={inputClass} />
         </div>
       )}
 
-      <div className="mt-4 flex justify-end">
+      <div className="flex justify-end pt-1">
         <button
           type="submit"
           disabled={loading}
-          className="rounded-lg bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-[#0f0f0f] transition hover:bg-[var(--accent-hover)] disabled:cursor-not-allowed disabled:opacity-60"
+          className="rounded-xl bg-[var(--accent)] px-5 py-2.5 text-sm font-semibold text-[#0c0d12] shadow-sm transition hover:bg-[var(--accent-hover)] disabled:cursor-not-allowed disabled:opacity-55"
         >
           {loading ? 'Saving…' : 'Save note'}
         </button>

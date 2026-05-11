@@ -1,29 +1,42 @@
-/* LeadFlow design system — source: CONTEXT.md */
+/* LeadFlow — professional UI tokens (dark, amber accent, market-ready) */
 :root {
-  --bg-primary: #0f0f0f;
-  --bg-surface: #1a1a1a;
-  --bg-elevated: #242424;
-  --text-primary: #f5f0e8;
-  --text-secondary: #9a9490;
-  --text-tertiary: #5c5856;
-  --accent: #d97706;
-  --accent-hover: #b45309;
-  --border: #2a2a2a;
-  --border-focus: #d97706;
+  --bg-primary: #090a0f;
+  --bg-surface: #12131a;
+  --bg-elevated: #1a1b24;
+  --bg-input: #16171f;
+  --text-primary: #f4f1eb;
+  --text-secondary: #9b9690;
+  --text-tertiary: #6b6762;
+  --accent: #e18b12;
+  --accent-muted: rgba(225, 139, 18, 0.14);
+  --accent-hover: #c7780f;
+  --border: rgba(255, 255, 255, 0.07);
+  --border-strong: rgba(255, 255, 255, 0.11);
+  --border-focus: #e18b12;
+  --ring-focus: rgba(225, 139, 18, 0.35);
 
-  --status-new: #64748b;
-  --status-contacted: #6366f1;
-  --status-qualified: #0d9488;
-  --status-proposal-sent: #d97706;
-  --status-won: #059669;
-  --status-lost: #e11d48;
+  --status-new: #7c8ea3;
+  --status-contacted: #7c83f3;
+  --status-qualified: #1ba89a;
+  --status-proposal-sent: #e18b12;
+  --status-won: #12a173;
+  --status-lost: #e34d68;
 
-  --overdue-bg: #1f0a0a;
-  --overdue-border: #e11d48;
-  --overdue-text: #f87171;
+  --overdue-bg: rgba(227, 77, 104, 0.08);
+  --overdue-border: #e34d68;
+  --overdue-text: #f0899f;
 
-  --font-display: 'Sora', sans-serif;
-  --font-mono: 'IBM Plex Mono', monospace;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.45);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  --shadow-glow-accent: 0 0 0 1px rgba(225, 139, 18, 0.12);
+
+  --font-display: 'Sora', system-ui, sans-serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  --radius-card: 1rem;
+  --radius-modal: 1.125rem;
 
   color-scheme: dark;
 }
@@ -32,10 +45,21 @@ body {
   margin: 0;
   background-color: var(--bg-primary);
   color: var(--text-primary);
-  font-family: var(--font-display);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Dark native controls (date/time, selects) in supported browsers */
+/* Subtle depth without breaking the warm dark brand */
+.app-shell {
+  min-height: 100vh;
+  background-color: var(--bg-primary);
+  background-image:
+    radial-gradient(ellipse 100% 70% at 50% -30%, rgba(225, 139, 18, 0.085), transparent 55%),
+    radial-gradient(ellipse 55% 45% at 100% 0%, rgba(124, 131, 243, 0.05), transparent 45%);
+}
+
+/* Dark native controls */
 input,
 textarea,
 select {

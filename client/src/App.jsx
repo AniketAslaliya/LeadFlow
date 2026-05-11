@@ -3,15 +3,23 @@ import LeadList from './components/LeadList.jsx'
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-[#0F0F0F] text-[var(--text-primary)]">
+    <div className="app-shell text-[var(--text-primary)]">
       <LeadList />
       <Toaster
+        position="top-center"
         toastOptions={{
-          className: '',
+          duration: 3200,
           style: {
             background: 'var(--bg-elevated)',
             color: 'var(--text-primary)',
-            border: '1px solid var(--border)',
+            border: '1px solid var(--border-strong)',
+            borderRadius: '12px',
+            boxShadow: 'var(--shadow-lg)',
+            fontSize: '14px',
+            fontFamily: 'var(--font-sans)',
+          },
+          success: {
+            iconTheme: { primary: 'var(--accent)', secondary: '#0c0d12' },
           },
         }}
       />

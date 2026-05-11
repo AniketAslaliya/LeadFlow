@@ -26,7 +26,7 @@ export default function LeadCard({ lead, onClick }) {
     <button
       type="button"
       onClick={onClick}
-      className="w-full text-left rounded-xl border border-[var(--border)] p-4 shadow-sm transition-all duration-200 hover:-translate-y-px hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--border-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-primary)]"
+      className="group w-full rounded-card border border-[var(--border)] bg-[var(--bg-surface)] p-4 text-left shadow-card ring-1 ring-white/[0.03] transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--border-strong)] hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-primary)]"
       style={{
         backgroundColor: accentBg,
         borderLeftWidth: 3,
@@ -35,30 +35,32 @@ export default function LeadCard({ lead, onClick }) {
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
-          <h3 className="font-display text-base font-semibold text-[var(--text-primary)] truncate">
+          <h3 className="font-display text-[1.0625rem] font-semibold tracking-tight text-[var(--text-primary)] transition group-hover:text-white truncate">
             {lead.name}
           </h3>
           {(lead.company || lead.phone) && (
-            <p className="mt-0.5 font-mono text-xs text-[var(--text-secondary)] truncate">
+            <p className="mt-1 font-mono text-[0.75rem] leading-snug text-[var(--text-secondary)] truncate">
               {[lead.company, lead.phone].filter(Boolean).join(' · ')}
             </p>
           )}
         </div>
         <StatusBadge status={lead.status} />
       </div>
-      <p className="mt-3 line-clamp-1 text-sm text-[var(--text-tertiary)]">{lastNote}</p>
+      <p className="mt-3 line-clamp-2 text-[0.8125rem] leading-relaxed text-[var(--text-tertiary)]">{lastNote}</p>
       {lastAt && (
-        <p className="mt-1 font-mono text-xs text-[var(--text-tertiary)]">{timeAgo(lastAt)}</p>
+        <p className="mt-1.5 font-mono text-[0.6875rem] uppercase tracking-wider text-[var(--text-tertiary)]">
+          {timeAgo(lastAt)}
+        </p>
       )}
       <div className="mt-3 flex flex-wrap gap-2">
         {todayFollowUp && (
-          <span className="inline-flex rounded-full bg-[#422006]/80 px-2 py-0.5 font-mono text-xs text-[#FBBF24] ring-1 ring-[var(--accent)]/40">
-            Follow-up today at {format(followUp, 'h:mm a')}
+          <span className="inline-flex items-center gap-1 rounded-full border border-[var(--accent)]/35 bg-[var(--accent-muted)] px-2.5 py-1 font-mono text-[0.6875rem] font-medium text-[var(--accent)]">
+            Follow-up today · {format(followUp, 'h:mm a')}
           </span>
         )}
         {overdue && (
-          <span className="inline-flex rounded-full bg-[#450a0a]/80 px-2 py-0.5 font-mono text-xs text-[var(--overdue-text)] ring-1 ring-[var(--overdue-border)]/50">
-            Overdue: was {format(followUp, "MMM d, yyyy 'at' h:mm a")}
+          <span className="inline-flex items-center gap-1 rounded-full border border-[var(--overdue-border)]/40 bg-[var(--overdue-bg)] px-2.5 py-1 font-mono text-[0.6875rem] font-medium text-[var(--overdue-text)]">
+            Overdue · {format(followUp, "MMM d, yyyy 'at' h:mm a")}
           </span>
         )}
       </div>

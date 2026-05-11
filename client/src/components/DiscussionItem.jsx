@@ -6,19 +6,21 @@ export default function DiscussionItem({ discussion }) {
   const fullStamp = format(created, 'MMM d, yyyy · h:mm a')
 
   return (
-    <div className="relative border-l-2 border-[var(--border)] pb-10 pl-6 last:border-transparent last:pb-0">
+    <div className="relative border-l-2 border-[var(--border-strong)] pb-10 pl-6 last:border-transparent last:pb-0">
       <span
-        className="absolute -left-[5px] top-1.5 h-2.5 w-2.5 rounded-full bg-[var(--accent)] ring-4 ring-[#1A1A1A]"
+        className="absolute -left-[5px] top-2 h-2.5 w-2.5 rounded-full border border-[var(--bg-surface)] bg-[var(--accent)] shadow-sm"
         aria-hidden
       />
-      <p className="font-mono text-xs text-[var(--text-tertiary)]">
+      <p className="font-mono text-[0.6875rem] uppercase tracking-wider text-[var(--text-tertiary)]">
         {fullStamp}{' '}
-        <span className="text-[var(--text-tertiary)]/80">({timeAgo(discussion.createdAt)})</span>
+        <span className="font-normal normal-case tracking-normal text-[var(--text-tertiary)]/75">
+          · {timeAgo(discussion.createdAt)}
+        </span>
       </p>
-      <p className="mt-2 text-[var(--text-primary)]">{discussion.note}</p>
+      <p className="mt-2.5 text-[0.9375rem] leading-relaxed text-[var(--text-primary)]">{discussion.note}</p>
       {discussion.followUpAt && (
-        <p className="mt-3 inline-flex rounded-full bg-[#422006]/80 px-2 py-0.5 font-mono text-xs text-[#FBBF24] ring-1 ring-[var(--accent)]/40">
-          Follow-up set for: {formatFollowUp(discussion.followUpAt)}
+        <p className="mt-3 inline-flex items-center rounded-full border border-[var(--accent)]/35 bg-[var(--accent-muted)] px-2.5 py-1 font-mono text-[0.6875rem] font-medium text-[var(--accent)]">
+          Follow-up · {formatFollowUp(discussion.followUpAt)}
         </p>
       )}
     </div>

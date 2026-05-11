@@ -84,7 +84,7 @@ export default function LeadDialog() {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-md"
       role="presentation"
       onClick={close}
     >
@@ -93,34 +93,34 @@ export default function LeadDialog() {
         role="dialog"
         aria-modal="true"
         aria-labelledby="lead-dialog-title"
-        className="flex max-h-[90vh] w-full max-w-[600px] animate-fade-in-up flex-col rounded-xl bg-[#1A1A1A] shadow-2xl ring-1 ring-[var(--border)]"
+        className="flex max-h-[90vh] w-full max-w-[600px] animate-fade-in-up flex-col rounded-modal border border-[var(--border-strong)] bg-[var(--bg-surface)] shadow-modal ring-1 ring-white/[0.06]"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="relative border-b border-[var(--border)] p-5 pb-4">
+        <div className="relative border-b border-[var(--border)] bg-[var(--bg-surface)] p-6 pb-5">
           <button
             type="button"
             onClick={close}
-            className="absolute right-4 top-4 rounded-lg p-1.5 text-[var(--text-tertiary)] transition hover:bg-[var(--bg-elevated)] hover:text-[var(--text-primary)]"
+            className="absolute right-4 top-4 rounded-lg p-2 text-[var(--text-tertiary)] transition hover:bg-[var(--bg-elevated)] hover:text-[var(--text-primary)]"
             aria-label="Close"
           >
             <X className="h-5 w-5" strokeWidth={2} />
           </button>
-          <h2 id="lead-dialog-title" className="font-display pr-10 text-2xl font-bold text-[var(--text-primary)]">
+          <h2 id="lead-dialog-title" className="font-display pr-12 text-2xl font-bold tracking-tight text-[var(--text-primary)]">
             {lead.name}
           </h2>
           {(lead.company || lead.phone) && (
-            <p className="mt-1 font-mono text-sm text-[var(--text-secondary)]">
+            <p className="mt-2 font-mono text-sm text-[var(--text-secondary)]">
               {[lead.company, lead.phone].filter(Boolean).join(' · ')}
             </p>
           )}
-          <label htmlFor="lead-status" className="mt-4 block text-xs font-medium uppercase tracking-wide text-[var(--text-tertiary)]">
+          <label htmlFor="lead-status" className="mt-5 block text-[0.6875rem] font-semibold uppercase tracking-wider text-[var(--text-tertiary)]">
             Status
           </label>
           <select
             id="lead-status"
             value={lead.status}
             onChange={handleStatusChange}
-            className="mt-1 w-full max-w-xs rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] px-3 py-2 text-sm text-[var(--text-primary)] outline-none ring-[var(--border-focus)] focus:ring-2"
+            className="mt-2 w-full max-w-xs rounded-xl border border-[var(--border)] bg-[var(--bg-input)] px-3 py-2.5 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--border-focus)] focus:shadow-glow"
           >
             {STATUS_OPTIONS.map((o) => (
               <option key={o.value} value={o.value}>
@@ -130,14 +130,14 @@ export default function LeadDialog() {
           </select>
         </div>
 
-        <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4">
+        <div className="min-h-0 flex-1 overflow-y-auto px-6 py-5">
           {discussionsLoading && discussions === undefined ? (
-            <div className="flex justify-center py-12 text-[var(--accent)]">
-              <Loader2 className="h-8 w-8 animate-spin" strokeWidth={2.5} />
+            <div className="flex justify-center py-14 text-[var(--accent)]">
+              <Loader2 className="h-9 w-9 animate-spin" strokeWidth={2.25} />
             </div>
           ) : (discussions?.length ?? 0) === 0 ? (
-            <p className="py-8 text-center text-sm text-[var(--text-tertiary)]">
-              No discussions yet. Log the first one below.
+            <p className="py-10 text-center text-sm leading-relaxed text-[var(--text-tertiary)]">
+              No discussions yet. Add the first note below.
             </p>
           ) : (
             <div className="pr-1">
@@ -148,7 +148,7 @@ export default function LeadDialog() {
           )}
         </div>
 
-        <div className="shrink-0 border-t border-[var(--border)] px-5 py-4">
+        <div className="shrink-0 border-t border-[var(--border)] bg-[var(--bg-surface)] px-6 py-5">
           <AddDiscussionForm leadId={selectedLeadId} onSaved={() => {}} />
         </div>
       </div>
